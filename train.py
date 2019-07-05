@@ -197,10 +197,16 @@ def train():
             update_vis_plot(iteration, loss_l.data.item(), loss_c.data.item(),
                             iter_plot, epoch_plot, 'append')
 
-        if iteration != 0 and iteration % 5000 == 0:
+        if iteration == 0:
+            continue
+        if iteration % 5000 == 0:
             print('Saving state, iter:', iteration)
             pth_file = '{}{}_{}.pth'.format(args.save_folder, cfg['name'],
                                             iteration)
+            torch.save(ssd_net.state_dict(), pth_file)
+        elif iteration % 1000 == 0:
+            print('Saving state snapshot')
+            pth_file = '{}{}_backup.pth'.format(args.save_folder, cfg['name'])
             torch.save(ssd_net.state_dict(), pth_file)
     pth_file = '{}{}.pth'.format(args.save_folder, cfg.name)
     torch.save(ssd_net.state_dict(), pth_file)
